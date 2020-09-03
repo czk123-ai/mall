@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive exclude="Detail"> <!--每次点击的详情页面都是新的-->
+      <router-view/>
+    </keep-alive>
+
     <main-tab-bar></main-tab-bar>
   </div>
 </template>

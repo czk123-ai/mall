@@ -1,6 +1,6 @@
 <template>
   <div class="goods" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,9 +20,19 @@
         }
       }
     },
+    computed:{
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
     methods:{
       imageLoad() { //图片加载完成发送到home
-        this.$bus.$emit('itemImageLoad')
+        if (this.$route.path.indexOf('/home') !==-1){
+          this.$bus.$emit('homeItemImgLoad')
+        } else if (this.$route.path.indexOf('/detail') !==-1){//在详情页也用到了该组件所以要判断
+          this.$bus.$emit('detailItemImgLoad')
+        }
+        // this.$bus.$emit('itemImageLoad')
       },
       itemClick() { //传递点击商品的iid
         this.$router.push('/detail/'+this.goodsItem.iid)
@@ -39,6 +49,8 @@
   }
   .goods img {
     width: 100%;
+    height: 40vh;
+  /*图片屏幕占比*/
   }
 
   .goods-info {

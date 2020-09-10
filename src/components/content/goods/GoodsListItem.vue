@@ -50,7 +50,7 @@
   }
   .goods img {
     width: 100%;
-    height: 40vh;
+    /*height: 40vh;*/
   /*图片屏幕占比*/
   }
 

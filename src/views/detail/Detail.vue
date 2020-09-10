@@ -33,6 +33,8 @@
   import {debounce} from "@/common/utils";
   import {backTopMixin} from "@/common/mixin";
 
+  import { mapActions } from 'vuex'
+
   export default {
     name: "Detail",
     components:{
@@ -46,7 +48,6 @@
       DetailCommentInfo,
       DetailBottomBar,
       GoodsList,
-
     },
     mixins: [backTopMixin],
     data(){
@@ -77,16 +78,16 @@
         this.topImages = data.itemInfo.topImages;
 
         //2.获取商品信息
-        this.goods = new  Goods(data.itemInfo, data.columns, data.shopInfo.services)
+        this.goods = new  Goods(data.itemInfo, data.columns, data.shopInfo.services);
 
         //3.创建店铺信息对象
-        this.shop = new Shop(data.shopInfo)
+        this.shop = new Shop(data.shopInfo);
 
         //4.保存商品的详情数据
         this.detailInfo = data.detailInfo;
 
         //5.获取参数的信息
-        this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+        this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
 
         //6.获取评论信息
         if(data.rate.cRate !== 0) {
@@ -121,6 +122,7 @@
       },100)
     },
     methods:{
+      ...mapActions(['addCart']),
       imageLoad(){
         this.$refs.scroll.refresh();
         this.getThemeTopY()
@@ -155,7 +157,16 @@
 
         //将商品添加到购物车里
         // this.$store.commit('addCart', product)
-        this.$store.dispatch('addCart',product)
+
+        this.addCart(product).then(res => {
+          this.$toast.show(res, 2000)
+          console.log(this.$toast)
+        }) //引入mapActions
+
+        // this.$store.dispatch('addCart',product).then(res => { //actions.js
+        //   console.log(res);
+        //
+        // })
       }
     },
     mounted() {
@@ -184,6 +195,14 @@
     background-color: #fff;
   }
   .content{
+    overflow: hidden; /*使顶部和底部导航栏无法拖动*/
+
+    /*等于*/
     height: calc(100% - 44px - 59px);
+    /*position: absolute;
+    top: 44px;
+    left: 0;
+    right: 0;
+    bottom: 49px;*/
   }
 </style>
